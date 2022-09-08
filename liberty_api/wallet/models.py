@@ -1,6 +1,7 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 import django
+
 # Create your models here.
 
 
@@ -16,7 +17,7 @@ class User(models.Model):
     mobile_number = PhoneNumberField(null=False, blank=False, unique=True)
     email = models.EmailField(max_length=40, default='zzzz@yyy')
 
-    dob = models.DateField(null=False,default=django.utils.timezone.now)
+    dob = models.DateField(null=False, default=django.utils.timezone.now)
     nationality = models.CharField(max_length=20, default='Japan')
 
     security_question1 = models.TextField(null=True, max_length=80)
@@ -27,11 +28,40 @@ class User(models.Model):
 
     registration = models.DateField(null=False, default=django.utils.timezone.now)
 
+
 class UPreference(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    image = models.ImageField(upload_to='upload_image')
+    #image = models.ImageField(upload_to='upload_image')
     ep_key = models.TextField(max_length=100)
+
+
+class Password(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    password = models.CharField(max_length=30)
+    ACTIVITY = (
+        ('Y', 'Yes'),
+        ('N', 'No')
+    )
+    active = models.CharField(max_length=1, choices=ACTIVITY)
+    pin = models.IntegerField()
+
+
+class Nft(models.Model):
+    nft_address = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    info = models.TextField(max_length=100, null=True)
+
+
+class NftTransactions(models.Model):
+    transaction_type = models.CharField(max_length=4)
+    send_receive_address = models.CharField(max_length=30)
+    t_status = models.CharField(max_length=5)
+    t_history = models.TextField(max_length=100, null=True)
