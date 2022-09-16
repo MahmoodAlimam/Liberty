@@ -5,7 +5,7 @@ import django
 # Create your models here.
 
 
-class User(models.Model):
+class Client(models.Model):
     user_id = models.CharField(max_length=20)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
@@ -31,7 +31,7 @@ class User(models.Model):
 
 class UPreference(models.Model):
     user = models.OneToOneField(
-        User,
+        Client,
         on_delete=models.CASCADE,
         primary_key=True,
     )
@@ -41,7 +41,7 @@ class UPreference(models.Model):
 
 class Password(models.Model):
     user = models.OneToOneField(
-        User,
+        Client,
         on_delete=models.CASCADE,
         primary_key=True,
     )
@@ -56,7 +56,7 @@ class Password(models.Model):
 
 class Nft(models.Model):
     nft_address = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Client, on_delete=models.CASCADE)
     info = models.TextField(max_length=100, null=True)
 
 

@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
+from .forms import NewUserForm
 from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
-
-# Create your views here.
-#def index(request):
-#    return HttpResponse("Hello, world. You are at the wallet index.")
 
 
 def index(request):
@@ -13,16 +11,19 @@ def index(request):
 
 
 def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+    if request.method == "POST":
+        #form = UserCreationForm(request.POST)
+        form = NewUserForm(request.POST)
 
         form.save()
         username = form.cleaned_data['username']
         password = form.cleaned_data['password1']
-        user = authenticate(username=username, password=password)
+        email = form.cleaned_data['email']
+        user = authenticate(username=username, password=password, email=email)
         login(request, user)
+
         return redirect('index')
     else:
-        form = UserCreationForm()
-    context = {'form' : form}
-    return render(request, 'registration/register.html', context)
+        #form = UserCreationForm()
+        form = NewUserForm()
+        return render (request=request, template_name="registration/register.html", context={'form':form})
